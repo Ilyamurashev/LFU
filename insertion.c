@@ -31,7 +31,9 @@ struct lfu_cache {
 
 
 
-void add(int key, struct page *last, struct freq_node *parent) {
+void add(int key, struct page *last, struct freq_node *parent,
+        struct page **freq_hash_t, struct freq_node **hash_t) {
+
     int freq = -1;
 
     hash_t[key]->parent = parent;
@@ -48,7 +50,7 @@ void add(int key, struct page *last, struct freq_node *parent) {
     freq_hash_t[freq]->lenght += 1;               //increase length
 }
 
-void remove(int key) {
+void remove(int key, struct page **freq_hash_t, struct freq_node **hash_t) {
     int freq = hash_t[key]->parent->value;
 
     if (freq_hash_t[freq]->lenght == 1) {
@@ -72,7 +74,8 @@ void remove(int key) {
 
 }
 
-struct freq_node *get_new_node(int value, struct freq_node *prev, struct freq_node *next) {
+struct freq_node *get_new_node(int value, struct freq_node *prev,
+                               struct freq_node *next, struct page **freq_hash_t) {
 
     struct freq_node *new_node;
 
@@ -96,7 +99,7 @@ struct freq_node *get_new_node(int value, struct freq_node *prev, struct freq_no
     return new_node;
 }
 
-void delete_node(struct freq_node *node) {
+void delete_node(struct freq_node *node, struct page **freq_hash_t) {
 
     int freq = node->value;
 
@@ -110,7 +113,7 @@ void delete_node(struct freq_node *node) {
     freq_hash_t[freq]->length = 0;
 }
 
-void insert(int key) {
+void insert(int key, struct page **freq_hash_t, struct freq_node **hash_t) {
 
     struct freq_node *freq_n;
     struct page *old_last;
@@ -132,7 +135,7 @@ void insert(int key) {
     }
 }
 
-void access(int key) {
+void access(int key, struct page **freq_hash_t, struct freq_node **hash_t) {
 
     if (key in hash_t) {        //create checking
         //m += 1;  - cache hit
@@ -160,7 +163,7 @@ void access(int key) {
 int main()
 {
     struct page **hash_t;
-    struct bucket_freq_node *freq_hash_t; //index = frequency
+    struct bucket_freq_node **freq_hash_t; //index = frequency
 
 
     return 0;
