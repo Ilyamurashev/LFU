@@ -27,7 +27,7 @@ struct lfu_cache {
     struct freq_node *freq_head;
     int size_hash_t;
     int size_freq_hash_t;
-}
+};
 
 
 
