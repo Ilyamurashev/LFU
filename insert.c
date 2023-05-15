@@ -2,7 +2,7 @@
 #include "insert.h"
 
 void add(int key, struct page *last, struct freq_node *parent,
-        struct page **freq_hash_t, struct freq_node **hash_t) {
+        struct bucket_freq_node **freq_hash_t, struct page **hash_t) {
 
     int freq = -1;
 
@@ -21,7 +21,7 @@ void add(int key, struct page *last, struct freq_node *parent,
 }
 
 struct freq_node *get_new_node(int value, struct freq_node *prev,
-                               struct freq_node *next, struct page **freq_hash_t) {
+                               struct freq_node *next, struct bucket_freq_node **freq_hash_t) {
 
     struct freq_node *new_node;
 
@@ -45,7 +45,7 @@ struct freq_node *get_new_node(int value, struct freq_node *prev,
     return new_node;
 }
 
-void insert(int key, struct page **freq_hash_t, struct freq_node **hash_t) {
+void insert(int key, struct bucket_freq_node **freq_hash_t, struct page **hash_t) {
 
     struct freq_node *freq_n;
     struct page *old_last;
@@ -67,7 +67,7 @@ void insert(int key, struct page **freq_hash_t, struct freq_node **hash_t) {
     }
 }
 
-void access(int key, struct page **freq_hash_t, struct freq_node **hash_t, int *cache_hit) {
+void access(int key, struct bucket_freq_node **freq_hash_t, struct page **hash_t, int *cache_hit) {
 
     if (key in hash_t) {        //create checking
         *cache_hit += 1;

@@ -1,7 +1,7 @@
 #include "delete.h"
 #include "insert.h"
 
-void remove(int key, struct page **freq_hash_t, struct freq_node **hash_t) {
+void remove(int key, struct bucket_freq_node **freq_hash_t, struct page **hash_t) {
     int freq = hash_t[key]->parent->value;
 
     if (freq_hash_t[freq]->lenght == 1) {
@@ -25,7 +25,7 @@ void remove(int key, struct page **freq_hash_t, struct freq_node **hash_t) {
 
 }
 
-void delete_node(struct freq_node *node, struct page **freq_hash_t) {
+void delete_node(struct freq_node *node, struct bucket_freq_node **freq_hash_t) {
 
     int freq = node->value;
 

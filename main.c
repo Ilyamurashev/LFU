@@ -8,10 +8,10 @@
 
 int main()
 {
-    const int MAX_LEN = 100;
+    const int MAX_LEN = 100;               //the limit of elements(= data) in program
 
-    int *cache_hit;
-    struct page **hash_t;
+    int *cache_hit;                        //counter of cash hits    
+    struct page **hash_t;                  //hash table of data. index of element = value
     struct bucket_freq_node **freq_hash_t; //index = frequency
 
     int  input_len = 0;
