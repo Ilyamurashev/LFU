@@ -4,7 +4,7 @@
 
 int if_in_hash(int key, struct page **hash_t, struct lfu_cache lfu){
     int lenght = lfu.size_hash_t;
-    //If it is possible(the size is appropriae) to get data from hash_table returns 1 = True
+    //If it is possible(the size is appropriate) to get data from hash_table returns 1 = True
     if (key < lenght){
         if (hash_t[key] != NULL) return 1;
     }
@@ -24,7 +24,7 @@ void cleaner(struct lfu cache lfu, struct page **hash_t,
 
             struct freq_node *current_freq_node = (lfu.freq_head)->next;
             frequency = current_freq_node->value
-            struct page *del_node = (freq_hash_t[frequency])->first;
+            struct page *del_page = (freq_hash_t[frequency])->first;
 
             //check if page contains anything
 
@@ -33,17 +33,21 @@ void cleaner(struct lfu cache lfu, struct page **hash_t,
                 return 0;
              }
 
-             //check if del_node is a single child of current_freq_node or not
+             //check if del_page is a single child of current_freq_node or not
              //in both cases we delete the exact page
+             //numbering pages from the top
 
-             if (del_page->prev == NULL){
+             if (del_page->next == NULL){
                 lfu.freq_head->next = current_freq_node->next;
-                free(del_node);
+                freq_hash_t[frequency] = NULL;
+                free(del_page);
                 free(current_freq_node);
              }
              else{
-                del_node->prev->next = del_node->next;
-                free(del_node);
+                del_page->next->prev = NULL;
+                freq_hash_t[frequency] = del_page->next;
+                free(del_page);
              }
              return 1;
 }
+
