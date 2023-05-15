@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include "struct.h"
 
 void add(int key, struct page *last, struct freq_node *parent,
         struct page **freq_hash_t, struct freq_node **hash_t);

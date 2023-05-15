@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "struct.h"
 #include "delete.h"
 #include "insert.h"
 #include "io.h"

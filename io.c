@@ -1,3 +1,4 @@
+#include "struct.h"
 #include "io.h"
 
 void show_greetings()

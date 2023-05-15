@@ -1,8 +1,18 @@
+#include "struct.h"
 #include "delete.h"
 #include "insert.h"
 
+void fill_freq_hash_t(struct bucket_freq_node **freq_hash_t, struct page *first,
+                    struct page *last, int length, int index) {
+
+    freq_hash_t[index]->first  = first;
+    freq_hash_t[index]->last   = last;
+    freq_hash_t[index]->length = length;
+
+}
+
 void add(int key, struct page *last, struct freq_node *parent,
-        struct bucket_freq_node **freq_hash_t, struct page **hash_t) {
+        struct bucket_freq_node **freq_hash_t, struct freq_node **hash_t) {
 
     int freq = -1;
 
@@ -34,13 +44,11 @@ struct freq_node *get_new_node(int value, struct freq_node *prev,
     new_node->value = value;
 
     if (value > lfu_cache->size_freq_hash_t) {
-        freq_hash_t = (struct freq_node*)realloc(freq_hash_t, (value+1)*sizeof(struct freq_node));
+        freq_hash_t = (struct bucket_freq_node**)realloc(freq_hash_t, (value+1)*sizeof(struct bucket_freq_node*));
         lfu_cache->size_freq_hash_t = value+1;
     }
 
-    freq_hash_t[value]->length = 0;
-    freq_hash_t[value]->first  = NULL;
-    freq_hash_t[value]->last   = NULL;
+    fill_freq_hash_t(freq_hash_t, NULL, NULL, 0, value);
 
     return new_node;
 }

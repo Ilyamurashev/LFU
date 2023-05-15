@@ -16,7 +16,7 @@ struct page {
 struct bucket_freq_node {  //element of frequency hash table
     struct page *last;
     struct page *first;
-    int lenght;
+    int length;
 };
 
 struct lfu_cache {

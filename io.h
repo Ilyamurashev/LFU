@@ -1,6 +1,7 @@
 #ifndef IO_H_INCLUDED
 #define IO_H_INCLUDED
 
+#include "struct.h"
 
 /*!
   @brief function greetings user.

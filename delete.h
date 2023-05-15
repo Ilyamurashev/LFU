@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include "struct.h"
 
 void remove(int key, struct page **freq_hash_t, struct freq_node **hash_t);
 
