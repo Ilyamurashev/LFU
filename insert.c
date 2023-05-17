@@ -9,7 +9,7 @@ struct page *add_page_in_hash_t(int key, struct page **hash_t)
 
 }
 
-//after remove and add we need to update freq_hash_t
+//after removing and adding we need to update freq_hash_t
 void update_freq_hash_t()
 {
 
@@ -26,17 +26,18 @@ void fill_freq_hash_t(struct bucket_freq_node **freq_hash_t, struct page *first,
 
 //last - last page in list of freq_node
 void add(struct page *new_page, struct page *last, struct freq_node *parent,
-        struct bucket_freq_node **freq_hash_t, struct page **hash_t) {
+        struct bucket_freq_node **freq_hash_t) {
 
     int freq = -1;
 
+    //change pointers of new page
     new_page->parent = parent;
     new_page->next = NULL;
     new_page->prev = last;
     if (last != NULL)
         last->next = new_page;
 
-    freq = new_page->parent->value;
+    freq = new_page->parent->value;               //new frequency
 
     if (freq_hash_t[freq]->first == NULL)
         freq_hash_t[freq]->first = new_page;      //change first in bucket if necessary
@@ -49,6 +50,7 @@ struct freq_node *get_new_node(int value, struct freq_node *prev,
 
     struct freq_node *new_node;
 
+    //creating and initialization
     new_node = (struct freq_node*)malloc(sizeof(struct freq_node));
     new_node->next = next;
     new_node->prev = prev;
@@ -57,6 +59,8 @@ struct freq_node *get_new_node(int value, struct freq_node *prev,
         next->prev = new_node;
     new_node->value = value;
 
+    //checking size of frequency hash table
+    //and expands if necessary
     if (value > lfu_cache->size_freq_hash_t) {
         freq_hash_t = (struct bucket_freq_node**)realloc(freq_hash_t, (value+1)*sizeof(struct bucket_freq_node*));
         lfu_cache->size_freq_hash_t = value+1;
@@ -67,22 +71,23 @@ struct freq_node *get_new_node(int value, struct freq_node *prev,
     return new_node;
 }
 
-void insert(int key, struct bucket_freq_node **freq_hash_t, struct page **hash_t, int *pages_in_cache) {
+void insert(int key, const struct bucket_freq_node **freq_hash_t,
+            const struct page **hash_t, int *pages_in_cache) {
 
     struct freq_node *freq_n;
     struct page *old_last;      //last page in list of freq_node before adding
     struct page *new_page;
 
-    if (key not in hash_t) {    //create checking
+    if (key not in hash_t) {    //checking
         *pages_in_cache += 1;   //new page => increase their number
         new_page = add_page_in_hash_t(key, hash_t);
         freq_n = lfu_cache->freq_head->next;
 
         if (freq_n->value != 1)
-            freq_n = get_new_node(1, lfu_cache->freq_head, freq_n);
+            freq_n = get_new_node(1, lfu_cache->freq_head, freq_n);  //creates freq_node with value = 1
 
         old_last = freq_hash_t[1]->last;
-        add(new_page, freq_hash_t[1]->last, freq_n); //add page in list of freq_node
+        add(new_page, freq_hash_t[1]->last, freq_n, freq_hash_t); //add page in list of freq_node
 
         /*if (key > lfu_cache->size_hash_t) {
             hash_t = (struct page **) realloc(hash_t, (key+1) * sizeof(struct page *));
@@ -94,29 +99,32 @@ void insert(int key, struct bucket_freq_node **freq_hash_t, struct page **hash_t
     }
 }
 
-            //move page to next freq_node
-            //and if necessary creates new freq_node
-
-void access(int key, struct bucket_freq_node **freq_hash_t, struct page **hash_t, int *cache_hit) {
+//move page to next freq_node
+//and if necessary creates new freq_node
+void access(int key, const struct bucket_freq_node **freq_hash_t, const struct page **hash_t, int *cache_hit) {
 
     struct page *get_page;
 
-    if (get_page = key in hash_t) {        //create checking
+    if (get_page = key in hash_t) {        //checking
         *cache_hit += 1;
         struct freq_node *freq_n = get_page->parent;
 
         if (freq_n->next != NULL) {
             struct freq_node *next_freq_n = freq_n->next;
 
-            if (next_freq_n == lfu_cache.freq_head or next_freq_n->value != (1 + freq_n->value)) {
+            if (next_freq_n == lfu_cache.freq_head or next_freq_n->value != (1 + freq_n->value)) {  //if it head or not 1
                 next_freq_n = get_new_node(freq_n->value + 1, freq_n, next_freq_n);
             }
 
-        } else {
+        } else { //if freq_node is last el in list
             next_freq_n = get_new_node(freq_n->value + 1, freq_n, freq_n->next);
         }
 
+        //remove from old frequency
         remove(get_page, freq_hash_t, hash_t);
-        add(get_page, freq_hash_t[get_page->parent->next->value]->last, next_freq_n, freq_hash_t, hash_t);
+
+        //add to new frequency node
+        add(get_page, freq_hash_t[get_page->parent->next->value]->last,
+           next_freq_n, freq_hash_t);
     }
 }

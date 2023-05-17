@@ -9,7 +9,7 @@ static const char WARNING_ERROR[] = "ERROR: an error occurred while trying to ge
 
 int test_lfu() {
 
-    int *cache_hit;
+    int *cache_hit;      //number of cache hits
     int *pages_in_cache; //number of different pages
     int *size_cache;     //from file
     struct page **hash_t;

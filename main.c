@@ -17,6 +17,7 @@ int main()
 
     show_greetings();
 
+    //get mode of working
     while (!mode) {
 
         while (!(get_input(input_line, MAX_LEN))) {
@@ -31,7 +32,7 @@ int main()
 
         switch (mode)
         {
-            case 't':
+            case 't':           //testing mode
                 if(test_lfu())
                     printf("Test aborted!!!\n");
                 break;

@@ -57,6 +57,7 @@ bool get_test_file_name(char test_file_name[], int lim)
 
     printf("Enter the name of the test file\n");
 
+    //miss spaces
     for (i = 0; isspace(c = getchar()); ++i)
         {}
 

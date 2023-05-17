@@ -1,3 +1,8 @@
+/*!
+  @file io.hpp
+  @brief Functions for greeting, inputing and outputing.
+*/
+
 #ifndef IO_H_INCLUDED
 #define IO_H_INCLUDED
 
