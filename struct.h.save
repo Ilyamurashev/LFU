@@ -1,7 +1,7 @@
 #ifndef STRUCT_H_INCLUDED
 #define STRUCT_H_INCLUDED
 
-struct freq_node {            //structure of frequency node
+struct freq_node {              //structure of frequency node
     int value;                //frequency
     struct freq_node *next;
     struct freq_node *prev;
@@ -16,10 +16,10 @@ struct page {
     struct page *prev_hash;   //previous page in bucket of hash_t
 };
 
-struct bucket_freq_node {     //element of frequency hash table, index = frequency
-    struct page *last;        //last page  in list of freq_node
-    struct page *first;       //first page in list of freq_node
-    int length;               //length   of   list of freq_node
+struct bucket_freq_node {  //element of frequency hash table, index = frequency
+    struct page *last;
+    struct page *first;
+    int length;
 };
 
 struct lfu_cache {

@@ -11,9 +11,10 @@ int main()
 {
     const int MAX_LEN = 100;
 
-    char mode = 0;
     int  input_len = 0;
     char input_line[MAX_LEN] = {};
+
+    *(cache_hit) = 0;
 
     show_greetings();
 

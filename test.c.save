@@ -10,13 +10,10 @@ static const char WARNING_ERROR[] = "ERROR: an error occurred while trying to ge
 int test_lfu() {
 
     int *cache_hit;
-    int *pages_in_cache; //number of different pages
-    int *size_cache;     //from file
+    int *pages_in_cache; //number of them
     struct page **hash_t;
     struct bucket_freq_node **freq_hash_t; //index = frequency
 
-    *(pages_in_cache) = 0;
-    *(cache_hit) = 0;
     char test_file_name[MAX_LEN] = {};
 
     get_test_file_name(test_file_name, MAX_LEN);

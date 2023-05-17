@@ -9,12 +9,6 @@ struct page *add_page_in_hash_t(int key, struct page **hash_t)
 
 }
 
-//after remove and add we need to update freq_hash_t
-void update_freq_hash_t()
-{
-
-}
-
 void fill_freq_hash_t(struct bucket_freq_node **freq_hash_t, struct page *first,
                     struct page *last, int length, int index) {
 
@@ -67,14 +61,13 @@ struct freq_node *get_new_node(int value, struct freq_node *prev,
     return new_node;
 }
 
-void insert(int key, struct bucket_freq_node **freq_hash_t, struct page **hash_t, int *pages_in_cache) {
+void insert(int key, struct bucket_freq_node **freq_hash_t, struct page **hash_t) {
 
     struct freq_node *freq_n;
-    struct page *old_last;      //last page in list of freq_node before adding
+    struct page *old_last;     //last page in list of freq_node before adding
     struct page *new_page;
 
     if (key not in hash_t) {    //create checking
-        *pages_in_cache += 1;   //new page => increase their number
         new_page = add_page_in_hash_t(key, hash_t);
         freq_n = lfu_cache->freq_head->next;
 
@@ -84,12 +77,11 @@ void insert(int key, struct bucket_freq_node **freq_hash_t, struct page **hash_t
         old_last = freq_hash_t[1]->last;
         add(new_page, freq_hash_t[1]->last, freq_n); //add page in list of freq_node
 
-        /*if (key > lfu_cache->size_hash_t) {
+       /* if (key > lfu_cache->size_hash_t) {
             hash_t = (struct page **) realloc(hash_t, (key+1) * sizeof(struct page *));
             lfu_cache->size_hash_t = key + 1;
         }
         */
-
         update_freq_hash_t(key, freq_n, NULL, old_last);
     }
 }
@@ -116,7 +108,7 @@ void access(int key, struct bucket_freq_node **freq_hash_t, struct page **hash_t
             next_freq_n = get_new_node(freq_n->value + 1, freq_n, freq_n->next);
         }
 
-        remove(get_page, freq_hash_t, hash_t);
-        add(get_page, freq_hash_t[get_page->parent->next->value]->last, next_freq_n, freq_hash_t, hash_t);
+        remove(new_page, freq_hash_t, hash_t);
+        add(new_page, freq_hash_t[hash_t[key]->parent->value]->last, next_freq_n);
     }
 }

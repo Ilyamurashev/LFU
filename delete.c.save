@@ -2,13 +2,13 @@
 #include "delete.h"
 #include "insert.h"
 
-void remove_page_in_hash_t(int key, struct page **hash_t)
+void remove_page_in_hash_t(int key)
 {
 
 }
 
 //remove page in list of freq_node
-void remove(struct page *new_page, struct bucket_freq_node **freq_hash_t, struct page **hash_t) {
+void remove(struct page *new_page, struct bucket_freq_node **freq_hash_t, struct freq_node **hash_t) {
 
     int freq = new_page->parent->value;
 
@@ -33,7 +33,7 @@ void remove(struct page *new_page, struct bucket_freq_node **freq_hash_t, struct
 
 }
 
-void delete_node(struct freq_node *node, struct bucket_freq_node **freq_hash_t) {
+void delete_node(struct freq_node *node, struct bucket_freq_nodee **freq_hash_t) {
 
     int freq = node->value;
 

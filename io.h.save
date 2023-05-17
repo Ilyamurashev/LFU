@@ -3,10 +3,11 @@
 
 #include "struct.h"
 
-enum {          //for getting hash of page
+enum {
   A = 257u,
   B = 519u,
-  P = 19739u,   //Power of hash-table
+  P = 19739u,
+  M = 11919u,   //Power of hash-table
 };
 
 /*!
