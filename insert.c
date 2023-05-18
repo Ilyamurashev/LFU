@@ -15,8 +15,10 @@ void update_freq_hash_t()
 
 }
 
-void fill_freq_hash_t(struct bucket_freq_node **freq_hash_t, struct page *first,
+void fill_freq_hash_t(struct bucket_freq_node *freq_hash_t, struct page *first,
                     struct page *last, int length, int index) {
+
+    assert(freq_hash_t && "freq_hash_t shall not be null");
 
     freq_hash_t[index]->first  = first;
     freq_hash_t[index]->last   = last;
@@ -24,9 +26,33 @@ void fill_freq_hash_t(struct bucket_freq_node **freq_hash_t, struct page *first,
 
 }
 
+void create_head(struct lfu_cache *lfu_cache, struct bucket_freq_node *freq_hash_t) {
+
+    assert(lfu_cache   &&   "lfu_cache shall not be null");
+    assert(freq_hash_t && "freq_hash_t shall not be null");
+
+    //freq_hash_t = (struct bucket_freq_node*)malloc(sizeof(struct bucket_freq_node*));
+    //Ãäå âûäåëÿòü ïàìÿòü???
+    struct freq_node head = (struct freq_node)malloc(sizeof(struct freq_node));
+    if (head == NULL) abort();
+
+    //head of list of freq_node
+    head.next = &head;
+    head.prev = &head;
+    head.value = 0;
+
+    fill_freq_hash_t(freq_hash_t, NULL, NULL, 0, 0);
+    lfu_cache->freq_head = &head;
+
+}
+
 //last - last page in list of freq_node
 void add(struct page *new_page, struct page *last, struct freq_node *parent,
-        struct bucket_freq_node **freq_hash_t) {
+        struct bucket_freq_node *freq_hash_t) {
+
+    assert(parent      &&      "parent shall not be null");
+    assert(new_page    &&    "new_page shall not be null");
+    assert(freq_hash_t && "freq_hash_t shall not be null");
 
     int freq = -1;
 
@@ -46,12 +72,19 @@ void add(struct page *new_page, struct page *last, struct freq_node *parent,
 }
 
 struct freq_node *get_new_node(int value, struct freq_node *prev,
-                               struct freq_node *next, struct bucket_freq_node **freq_hash_t) {
+                               struct freq_node *next, struct lfu_cache *lfu_cache,
+                               struct bucket_freq_node *freq_hash_t) {
+
+    assert(prev        &&        "prev shall not be null");
+    assert(lfu_cache   &&   "lfu_cache shall not be null");
+    assert(freq_hash_t && "freq_hash_t shall not be null");
 
     struct freq_node *new_node;
 
     //creating and initialization
     new_node = (struct freq_node*)malloc(sizeof(struct freq_node));
+    if (new_node == NULL) abort();
+
     new_node->next = next;
     new_node->prev = prev;
     prev->next = new_node;
@@ -61,8 +94,9 @@ struct freq_node *get_new_node(int value, struct freq_node *prev,
 
     //checking size of frequency hash table
     //and expands if necessary
+    //ÏÐÀÂÈËÜÍÎ ÍÀÏÈÑÀÒÜ ÐÅÀËËÎÊ
     if (value > lfu_cache->size_freq_hash_t) {
-        freq_hash_t = (struct bucket_freq_node**)realloc(freq_hash_t, (value+1)*sizeof(struct bucket_freq_node*));
+        freq_hash_t = (struct bucket_freq_node*)realloc(freq_hash_t, (value+1)*sizeof(struct bucket_freq_node));
         lfu_cache->size_freq_hash_t = value+1;
     }
 
@@ -71,8 +105,12 @@ struct freq_node *get_new_node(int value, struct freq_node *prev,
     return new_node;
 }
 
-void insert(int key, const struct bucket_freq_node **freq_hash_t,
+void insert(int key, const struct bucket_freq_node *freq_hash_t,
             const struct page **hash_t, int *pages_in_cache) {
+
+    assert(hash_t         &&         "hash_t shall not be null");
+    assert(freq_hash_t    &&    "freq_hash_t shall not be null");
+    assert(pages_in_cache && "pages_in_cache shall not be null");
 
     struct freq_node *freq_n;
     struct page *old_last;      //last page in list of freq_node before adding
@@ -83,11 +121,13 @@ void insert(int key, const struct bucket_freq_node **freq_hash_t,
         new_page = add_page_in_hash_t(key, hash_t);
         freq_n = lfu_cache->freq_head->next;
 
-        if (freq_n->value != 1)
-            freq_n = get_new_node(1, lfu_cache->freq_head, freq_n);  //creates freq_node with value = 1
+        if (freq_n->value == 0)
+            freq_n = get_new_node(1, lfu_cache->freq_head, NULL,   freq_hash_t);    //if only head => creates freq_node with value = 1
+        else if (freq_n->value != 1)
+            freq_n = get_new_node(1, lfu_cache->freq_head, freq_n, freq_hash_t);  //creates freq_node with value = 1
 
         old_last = freq_hash_t[1]->last;
-        add(new_page, freq_hash_t[1]->last, freq_n, freq_hash_t); //add page in list of freq_node
+        add(new_page, freq_hash_t[1]->last, freq_n, freq_hash_t);    //add page in list of freq_node
 
         /*if (key > lfu_cache->size_hash_t) {
             hash_t = (struct page **) realloc(hash_t, (key+1) * sizeof(struct page *));
@@ -101,7 +141,12 @@ void insert(int key, const struct bucket_freq_node **freq_hash_t,
 
 //move page to next freq_node
 //and if necessary creates new freq_node
-void access(int key, const struct bucket_freq_node **freq_hash_t, const struct page **hash_t, int *cache_hit) {
+void access(int key, const struct bucket_freq_node *freq_hash_t,
+            const struct page **hash_t, int *cache_hit) {
+
+    assert(hash_t      &&      "hash_t shall not be null");
+    assert(cache_hit   &&   "cache_hit shall not be null");
+    assert(freq_hash_t && "freq_hash_t shall not be null");
 
     struct page *get_page;
 
@@ -112,7 +157,8 @@ void access(int key, const struct bucket_freq_node **freq_hash_t, const struct p
         if (freq_n->next != NULL) {
             struct freq_node *next_freq_n = freq_n->next;
 
-            if (next_freq_n == lfu_cache.freq_head or next_freq_n->value != (1 + freq_n->value)) {  //if it head or not 1
+            //if it head or not 1
+            if (next_freq_n == lfu_cache.freq_head or next_freq_n->value != (1 + freq_n->value)) {
                 next_freq_n = get_new_node(freq_n->value + 1, freq_n, next_freq_n);
             }
 

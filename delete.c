@@ -8,7 +8,11 @@ void remove_page_in_hash_t(int key, struct page **hash_t)
 }
 
 //remove page in list of freq_node, not remove page from hash_t
-void remove(struct page *new_page, struct bucket_freq_node **freq_hash_t, struct page **hash_t) {
+void remove(struct page *new_page, struct bucket_freq_node *freq_hash_t, struct page **hash_t) {
+
+    assert(hash_t      &&      "hash_t shall not be null");
+    assert(new_page    &&    "new_page shall not be null");
+    assert(freq_hash_t && "freq_hash_t shall not be null");
 
     int freq = new_page->parent->value;
 
@@ -33,7 +37,10 @@ void remove(struct page *new_page, struct bucket_freq_node **freq_hash_t, struct
 
 }
 
-void delete_node(struct freq_node *node, struct bucket_freq_node **freq_hash_t) {
+void delete_node(struct freq_node *node, struct bucket_freq_node *freq_hash_t) {
+
+    assert(node        &&        "node shall not be null");
+    assert(freq_hash_t && "freq_hash_t shall not be null");
 
     int freq = node->value;
 

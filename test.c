@@ -13,7 +13,7 @@ int test_lfu() {
     int *pages_in_cache; //number of different pages
     int *size_cache;     //from file
     struct page **hash_t;
-    struct bucket_freq_node **freq_hash_t; //index = frequency
+    struct bucket_freq_node *freq_hash_t; //index = frequency  онундс рср ндмю гбегдю!!!!!
 
     *(pages_in_cache) = 0;
     *(cache_hit) = 0;
