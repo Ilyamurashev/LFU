@@ -6,12 +6,15 @@
 #ifndef IO_H_INCLUDED
 #define IO_H_INCLUDED
 
+#include <errno.h>
+#include <time.h>
+
 #include "struct.h"
 
 enum {          //for getting hash of page
   A = 257u,
   B = 519u,
-  P = 19739u,   //Power of hash-table
+  Power_hash = 19739u,   //Power of hash-table
 };
 
 /*!

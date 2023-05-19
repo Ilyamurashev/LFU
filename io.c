@@ -81,7 +81,20 @@ bool get_test_file_name(char test_file_name[], int lim)
 
 int get_page_hash(int n)
 {
-    n = (n > 0) ? n : -n;
+    return (A * n + B) % Power_hash;
+}
 
-    return (A * n + B) % P;
+void check_data_input(int read_page, int check_arg)
+{
+    assert(check_arg > 0);   //check_arg - positive integer
+    assert(read_page == 1);
+    assert(read_page != EOF);
+}
+
+void error_message()
+{
+    fprintf(stderr, "%s\n", strerror(errno));
+    fprintf(stderr, "ERROR_LINE %d\n", __LINE__);
+    abort();
+
 }

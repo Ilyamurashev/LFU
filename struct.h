@@ -29,8 +29,7 @@ struct bucket_freq_node {        //element of frequency hash table, index = freq
 
 struct lfu_cache {
     struct page **hash_t;
-    struct freq_node *freq_head;
-    int size_hash_t;             //size of hash table
+    struct freq_node *freq_head;s
     int size_freq_hash_t;        //size of frequency hash table
 };
 

@@ -15,6 +15,11 @@ int main()
     int  input_len = 0;
     char input_line[MAX_LEN] = {};
 
+    // для хранения времени выполнения кода
+    double time_spent = 0.0;
+
+    clock_t begin_time = clock();
+
     show_greetings();
 
     //get mode of working
@@ -44,6 +49,14 @@ int main()
         }
 
     }
+
+    clock_t end_time = clock();
+
+    //calculate the elapsed time by finding the difference (end_time - begin_time)
+    //dividing the difference by CLOCKS_PER_SEC to convert to seconds
+    time_spent += (double)(end_time - begin_time) / CLOCKS_PER_SEC;
+
+    printf("The elapsed time is %f seconds\n", time_spent);
 
     return 0;
 }
