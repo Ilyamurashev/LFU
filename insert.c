@@ -75,9 +75,9 @@ void create_lfu_cache(struct lfu_cache **lfu_cache, struct page ***hash_t,
     //printf("address %d\n", &lfu_cache);
 
     *hash_t = (struct page **)calloc(Power_hash, sizeof(struct page *));
-    if (hash_t == NULL) error_message();
+    if (*hash_t == NULL) error_message();
 
-    (*lfu_cache)->hash_t    = hash_t;
+    (*lfu_cache)->hash_t = *hash_t;
     (*lfu_cache)->freq_head = NULL;
 
 }
@@ -161,7 +161,7 @@ struct freq_node *get_new_node(int value, struct freq_node *prev,
         lfu_cache->size_freq_hash_t = value+1;
     }
 
-    fill_freq_hash_t(&freq_hash_t, NULL, NULL, 0, value);
+    fill_freq_hash_t(&freq_hash_t, NULL, NULL, 17, value);
     printf("33HERE! %d\n", freq_hash_t[1].length);
 
     return new_node;
