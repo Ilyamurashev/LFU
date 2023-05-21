@@ -6,8 +6,12 @@
 #ifndef IO_H_INCLUDED
 #define IO_H_INCLUDED
 
+#include <string.h>
+#include <ctype.h>
 #include <errno.h>
 #include <time.h>
+#include <assert.h>
+#include <stdlib.h>
 
 #include "struct.h"
 
@@ -39,7 +43,7 @@ char check_selected_mode(char input_line[], int input_len);
      @param [in] lim           lim          - max length
 
 */
-bool get_input(char input_line[], int lim);
+int get_input(char input_line[], int lim);
 
 /*!
   @brief function gets test file.
@@ -47,6 +51,16 @@ bool get_input(char input_line[], int lim);
      @param [in] name_test_file  name_test_file - name of test file
      @param [in] lim             lim            - name's of test file max length
 */
-bool get_test_file_name(char *test_file_name, int lim);
+int get_test_file_name(char *test_file_name, int lim);
+
+int get_page_hash(int key);
+
+void check_data_input(int read_page, int check_arg);
+
+void error_message();
+
+struct page* if_page_exist(int key, struct page **hash_t);
+
+int check_key(int key, struct page* page);
 
 #endif // IO_H_INCLUDED

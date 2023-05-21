@@ -6,6 +6,8 @@
 #ifndef STRUCT_H_INCLUDED
 #define STRUCT_H_INCLUDED
 
+#include<stdio.h>
+
 struct freq_node {               //structure of frequency node
     int value;                   //frequency
     struct freq_node *next;
@@ -29,7 +31,7 @@ struct bucket_freq_node {        //element of frequency hash table, index = freq
 
 struct lfu_cache {
     struct page **hash_t;
-    struct freq_node *freq_head;s
+    struct freq_node *freq_head;
     int size_freq_hash_t;        //size of frequency hash table
 };
 
