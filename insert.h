@@ -69,7 +69,7 @@ void create_head(struct lfu_cache *lfu_cache, struct bucket_freq_node **freq_has
 
 */
 void add(struct page *new_page, struct page *last, struct freq_node *parent,
-         struct bucket_freq_node *freq_hash_t);
+         struct bucket_freq_node **freq_hash_t);
 
 /*!
   @brief function create new freq_node.
